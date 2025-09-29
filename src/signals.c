@@ -56,9 +56,10 @@ void	handle_gsig(t_data *data)
 void	handle_sigint(int sig)
 {
 	g_sig = sig;
-	write(STDOUT_FILENO, "\n", 1);
-	rl_replace_line("", 0);
-	rl_redisplay();
+    rl_replace_line("", 0);
+    rl_on_new_line();
+    rl_crlf();
+    rl_redisplay();
 }
 
 void	setup_signals(void)
