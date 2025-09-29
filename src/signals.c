@@ -19,14 +19,17 @@ int g_sig = 0;
 int g_heredoc_interrupted = 0;
 static struct termios	g_termios_orig;
 
-void	disable_echoctl(void)
+void	set_echoctl(int enable)
 {
     struct termios t;
 
     if (tcgetattr(STDIN_FILENO, &g_termios_orig) == -1)
         return ;
     t = g_termios_orig;
-    t.c_lflag &= ~ECHOCTL;
+    if (enable)
+        t.c_lflag |= ECHOCTL;   /* Enable ECHOCTL */
+    else
+        t.c_lflag &= ~ECHOCTL;  /* Disable ECHOCTL */
     tcsetattr(STDIN_FILENO, TCSANOW, &t);
 }
 

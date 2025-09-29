@@ -96,7 +96,7 @@ void	handle_sigint(int sig);
 void    heredoc_sigint(int sig);
 void	setup_signals(void);
 void	setup_child_signals(void);
-void	disable_echoctl(void);
+void	set_echoctl(int enable);
 void	restore_echoctl(void);
 
 void	process_input(char *input, t_data *data);

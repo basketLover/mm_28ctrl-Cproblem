@@ -100,7 +100,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	setup_signals();
-	disable_echoctl();
+	set_echoctl(0);  /* 0 = disable ECHOCTL (no ^C), 1 = enable ECHOCTL (show ^C) */
 	env_count = count_env_vars(envp);
 	data.env = copy_env(envp, env_count);
 	if (!data.env)
