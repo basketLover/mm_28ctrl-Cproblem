@@ -38,7 +38,8 @@ void	restore_echoctl(void)
 void	heredoc_sigint(int sig)
 {
     (void)sig;
-    write(STDOUT_FILENO, "\n", 1);
+    rl_replace_line("", 0);
+    rl_crlf();
     _exit(130);
 }
 
