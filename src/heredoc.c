@@ -66,9 +66,8 @@ int	write_heredoc_input(int fd, char *delim, int delim_quoted,
 			print_heredoc_warning(delim, data);
 			break ;
 		}
-		if (g_sig || ft_strcmp(line, delim) == 0)
+		if (ft_strcmp(line, delim) == 0)
 		{
-			rl_replace_line("", 0);
 			free(line);
 			line = NULL;
 			break ;
@@ -77,7 +76,7 @@ int	write_heredoc_input(int fd, char *delim, int delim_quoted,
 			return (1);
 	}
 	rl_clear_history();
-	return (g_sig);
+	return (0);
 }
 
 int	handle_heredoc(char *delim, int delim_quoted, t_data *data)
@@ -105,19 +104,27 @@ int	handle_heredoc(char *delim, int delim_quoted, t_data *data)
 		data->heredoc_open_line = get_current_line(data);
 		write_heredoc_input(pipefd[1], delim, delim_quoted, data);
 		close(pipefd[1]);
-		_exit(g_sig);
+		_exit(0);
 	}
 	close(pipefd[1]);
 	/* Temporarily ignore SIGINT in parent while waiting the heredoc child */
 	{
 		struct sigaction old_int;
 		struct sigaction ign;
+		int status;
 		ign.sa_handler = SIG_IGN;
 		sigemptyset(&ign.sa_mask);
 		ign.sa_flags = 0;
 		sigaction(SIGINT, &ign, &old_int);
-		waitpid(pid, NULL, 0);
+		waitpid(pid, &status, 0);
 		sigaction(SIGINT, &old_int, NULL);
+		/* If child was interrupted (exit status 130), close the pipe */
+		if (WEXITSTATUS(status) == 130)
+		{
+			close(pipefd[0]);
+			g_heredoc_interrupted = 1;
+			return (-1);
+		}
 	}
 	return (pipefd[0]);
 }

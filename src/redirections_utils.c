@@ -30,11 +30,20 @@ int	prepare_heredocs_for_cmds(t_cmd *cmds, t_data *data)
 			{
 				if (r->fd >= 0)
 					close(r->fd);
+				g_heredoc_interrupted = 0;
 				r->fd = handle_heredoc(r->target, r->quoted, data);
 				if (r->fd < 0)
 				{
-					ft_putendl_fd("minishell: failed to create heredoc", 2);
-					return (-1);
+					if (g_heredoc_interrupted)
+					{
+						/* Heredoc was interrupted by Ctrl+C, just return without error message */
+						return (-1);
+					}
+					else
+					{
+						ft_putendl_fd("minishell: failed to create heredoc", 2);
+						return (-1);
+					}
 				}
 			}
 			r = r->next;

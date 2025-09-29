@@ -16,6 +16,7 @@
 #include "libft/libft.h"
 
 int g_sig = 0;
+int g_heredoc_interrupted = 0;
 static struct termios	g_termios_orig;
 
 void	disable_echoctl(void)
@@ -38,8 +39,8 @@ void	restore_echoctl(void)
 void	heredoc_sigint(int sig)
 {
     (void)sig;
-    rl_replace_line("", 0);
-    rl_crlf();
+    g_heredoc_interrupted = 1;
+    write(STDOUT_FILENO, "\r\n", 2);
     _exit(130);
 }
 

@@ -32,6 +32,7 @@
 # include "libft/ft_printf/ft_printf.h"
 
 extern int	g_sig;
+extern int	g_heredoc_interrupted;
 
 typedef struct s_data
 {
