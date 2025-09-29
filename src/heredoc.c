@@ -69,7 +69,6 @@ int	write_heredoc_input(int fd, char *delim, int delim_quoted,
 		if (g_sig || ft_strcmp(line, delim) == 0)
 		{
 			rl_replace_line("", 0);
-			rl_redisplay();
 			free(line);
 			line = NULL;
 			break ;
@@ -95,7 +94,13 @@ int	handle_heredoc(char *delim, int delim_quoted, t_data *data)
 		return (perror("fork"), close(pipefd[0]), close(pipefd[1]), -1);
 	if (pid == 0)
 	{
-		setup_child_signals();
+		/* In heredoc child, handle SIGINT to exit immediately without duplicating prompts */
+		struct sigaction sa_hd;
+		sa_hd.sa_handler = heredoc_sigint;
+		sigemptyset(&sa_hd.sa_mask);
+		sa_hd.sa_flags = 0;
+		sigaction(SIGINT, &sa_hd, NULL);
+		signal(SIGQUIT, SIG_IGN);
 		close(pipefd[0]);
 		data->heredoc_open_line = get_current_line(data);
 		write_heredoc_input(pipefd[1], delim, delim_quoted, data);
@@ -103,6 +108,16 @@ int	handle_heredoc(char *delim, int delim_quoted, t_data *data)
 		_exit(g_sig);
 	}
 	close(pipefd[1]);
-	waitpid(pid, NULL, 0);
+	/* Temporarily ignore SIGINT in parent while waiting the heredoc child */
+	{
+		struct sigaction old_int;
+		struct sigaction ign;
+		ign.sa_handler = SIG_IGN;
+		sigemptyset(&ign.sa_mask);
+		ign.sa_flags = 0;
+		sigaction(SIGINT, &ign, &old_int);
+		waitpid(pid, NULL, 0);
+		sigaction(SIGINT, &old_int, NULL);
+	}
 	return (pipefd[0]);
 }

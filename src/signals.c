@@ -16,6 +16,31 @@
 #include "libft/libft.h"
 
 int g_sig = 0;
+static struct termios	g_termios_orig;
+
+void	disable_echoctl(void)
+{
+    struct termios t;
+
+    if (tcgetattr(STDIN_FILENO, &g_termios_orig) == -1)
+        return ;
+    t = g_termios_orig;
+    t.c_lflag &= ~ECHOCTL;
+    tcsetattr(STDIN_FILENO, TCSANOW, &t);
+}
+
+void	restore_echoctl(void)
+{
+    if (g_termios_orig.c_cflag)
+        tcsetattr(STDIN_FILENO, TCSANOW, &g_termios_orig);
+}
+
+void	heredoc_sigint(int sig)
+{
+    (void)sig;
+    write(STDOUT_FILENO, "\n", 1);
+    _exit(130);
+}
 
 void	handle_gsig(t_data *data)
 {
@@ -32,9 +57,7 @@ void	handle_sigint(int sig)
 {
 	g_sig = sig;
 	write(STDOUT_FILENO, "\n", 1);
-	ioctl(STDIN_FILENO, TIOCSTI, "\n");
 	rl_replace_line("", 0);
-	/*rl_on_new_line();*/
 	rl_redisplay();
 }
 

@@ -83,7 +83,6 @@ static void	main_loop(t_data *data)
 			add_history((input));
 		process_input(input, data);
 		handle_gsig(data);
-		rl_redisplay();
 	}
 	free(input);
 }
@@ -101,6 +100,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	setup_signals();
+	disable_echoctl();
 	env_count = count_env_vars(envp);
 	data.env = copy_env(envp, env_count);
 	if (!data.env)
@@ -110,6 +110,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 	main_loop((&data));
 	ft_printf("exit\n");
+	restore_echoctl();
 	free_string_array(data.env);
 	return (0);
 }
