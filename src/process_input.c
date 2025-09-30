@@ -82,7 +82,6 @@ void	process_input(char *input, t_data *data)
 		if (!cmds->next && handle_single_cmd(cmds, data, input))
 			return (free_cmds_and_input(cmds, input));
 	}
-
 	status = execute_cmds_wrapper(cmds, data);
 	if (status >= 0)
 		data->last_status = status;

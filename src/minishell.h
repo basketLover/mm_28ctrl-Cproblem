@@ -6,7 +6,7 @@
 /*   By: mdolores <mdolores@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 15:00:21 by iumorave          #+#    #+#             */
-/*   Updated: 2025/09/30 13:42:02 by mdolores         ###   ########.fr       */
+/*   Updated: 2025/09/30 18:14:16 by mdolores         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ extern volatile sig_atomic_t	g_sig;
 
 typedef struct s_data
 {
-	char	**env;
-	long	current_line;
-	long	heredoc_open_line;
-	int		last_status;
-	int		heredoc_interrupted;
+	char			**env;
+	long			current_line;
+	long			heredoc_open_line;
+	int				last_status;
+	int				heredoc_interrupted;
 	struct termios	termios_orig;
 }	t_data;
 
@@ -90,7 +90,6 @@ typedef struct s_cmd
 	int				argc;
 	t_redir			*redirs;
 	struct s_cmd	*next;
-	int				heredoc_only;
 }	t_cmd;
 
 void	handle_gsig(t_data *data);

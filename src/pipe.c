@@ -6,7 +6,7 @@
 /*   By: mdolores <mdolores@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:38:18 by mariserr          #+#    #+#             */
-/*   Updated: 2025/09/30 14:19:10 by mdolores         ###   ########.fr       */
+/*   Updated: 2025/09/30 18:12:19 by mdolores         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,19 @@ pid_t	fork_and_exec(t_cmd *cmd, t_pipe_ctx *ctx, int i, t_data *data)
 
 	pid = fork();
 	if (pid < 0)
-	{
-		perror("fork");
-		return (-1);
-	}
+		return (perror("fork"), -1);
 	if (pid == 0)
 	{
 		setup_child_pipes(ctx->pipefds, i, ctx->num_cmds);
 		close_all_pipes(ctx->pipefds, 2 * (ctx->num_cmds - 1));
+		if (!cmd->argv || !cmd->argv[0])
+		{
+			if (cmd->redirs && apply_redirections_child(cmd, data) != 0)
+				exit(1);
+			exit (0);
+		}
 		if (cmd->redirs && apply_redirections_child(cmd, data) != 0)
-			exit(1);
+			exit (1);
 		if (is_builtin_name(cmd->argv[0]))
 			exit(handle_builtin(cmd->argv, ctx->data));
 		exec_child_command(cmd, ctx->data);

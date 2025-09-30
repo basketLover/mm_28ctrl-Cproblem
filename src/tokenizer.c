@@ -3,11 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariserr <mariserr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mdolores <mdolores@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/27 13:30:31 by mariserr          #+#    #+#             */
-/*   Updated: 2025/09/27 13:30:46 by mariserr         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/09/30 18:19:40 by mdolores         ###   ########.fr       */
 /*                                                                            */
+/* ************************************************************************** */
+
 /* ************************************************************************** */
 
 #define _POSIX_C_SOURCE 200809L
@@ -87,7 +89,7 @@ static void	handle_word(char *input, int *i, t_token **head)
 	len = *i - start;
 	token_str = ft_substr(input, start, len);
 	if (!token_str)
-		return (free(token_str));
+		return ;
 	append_token(head, token_str, T_WORD, quoted);
 	free(token_str);
 }
