@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_builtin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iumorave <iumorave@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mdolores <mdolores@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:56:12 by iumorave          #+#    #+#             */
-/*   Updated: 2025/09/27 14:56:15 by iumorave         ###   ########.fr       */
+/*   Updated: 2025/09/30 14:30:31 by mdolores         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,13 @@ void	update_pwd_and_oldpwd(char *oldpwd, char *pwd, char ***env)
 
 void	handle_invalid_path(char *cmd)
 {
-	ft_putendl_fd(ft_strjoin3("minishell: ", cmd,
-			": command not found"), 2);
+	char	*msg;
+
+	msg = ft_strjoin3("minishell: ", cmd, ": command not found");
+	if (!msg)
+		return ;
+	ft_putendl_fd(msg, 2);
+	free(msg);
 	exit(127);
 }
 

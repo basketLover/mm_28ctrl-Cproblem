@@ -6,7 +6,7 @@
 /*   By: mdolores <mdolores@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 15:01:21 by iumorave          #+#    #+#             */
-/*   Updated: 2025/09/28 20:11:52 by mdolores         ###   ########.fr       */
+/*   Updated: 2025/09/30 12:34:47 by mdolores         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,12 +95,11 @@ int	main(int argc, char **argv, char **envp)
 	data.current_line = 0;
 	data.last_status = 0;
 	data.heredoc_open_line = 0;
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
+	data.heredoc_interrupted = 0;
 	(void)argc;
 	(void)argv;
 	setup_signals();
-	set_echoctl(0);  /* 0 = disable ECHOCTL (no ^C), 1 = enable ECHOCTL (show ^C) */
+	set_echoctl(&data, 1);
 	env_count = count_env_vars(envp);
 	data.env = copy_env(envp, env_count);
 	if (!data.env)
@@ -110,7 +109,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 	main_loop((&data));
 	ft_printf("exit\n");
-	restore_echoctl();
+	restore_echoctl(&data);
 	free_string_array(data.env);
 	return (0);
 }

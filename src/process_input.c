@@ -75,12 +75,14 @@ void	process_input(char *input, t_data *data)
 	if (!cmds)
 		return (free(input));
 	trim_argv(cmds);
-	if (!cmds->argv[0])
-		return (free_cmds_and_input(cmds, input));
 	if (prepare_heredocs_for_cmds(cmds, data) != 0)
 		return (free_cmds_and_input(cmds, input));
-	if (!cmds->next && handle_single_cmd(cmds, data, input))
-		return (free_cmds_and_input(cmds, input));
+	if (cmds->argv && cmds->argv[0])
+	{
+		if (!cmds->next && handle_single_cmd(cmds, data, input))
+			return (free_cmds_and_input(cmds, input));
+	}
+
 	status = execute_cmds_wrapper(cmds, data);
 	if (status >= 0)
 		data->last_status = status;

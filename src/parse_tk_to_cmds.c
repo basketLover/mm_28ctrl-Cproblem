@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_tk_to_cmds.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariserr <mariserr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mdolores <mdolores@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:39:54 by mariserr          #+#    #+#             */
-/*   Updated: 2025/09/27 13:39:56 by mariserr         ###   ########.fr       */
+/*   Updated: 2025/09/30 13:56:34 by mdolores         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ t_cmd	*parse_tokens_to_cmds(t_token *token_head, t_data *data)
 {
 	t_cmd	*head_cmd;
 	t_cmd	current_cmd;
+	t_cmd	*new_cmd;
 	t_token	*token;
 
 	head_cmd = NULL;
@@ -81,7 +82,12 @@ t_cmd	*parse_tokens_to_cmds(t_token *token_head, t_data *data)
 		token = token->next;
 	}
 	if (current_cmd.argc > 0 || current_cmd.redirs)
-		append_cmd(&head_cmd, create_cmd(current_cmd.argv,
-				current_cmd.argc, current_cmd.redirs));
+	{
+		new_cmd = create_cmd(current_cmd.argv,
+				current_cmd.argc, current_cmd.redirs);
+		if (!current_cmd.argv && current_cmd.redirs)
+			new_cmd->heredoc_only = 1;
+		append_cmd(&head_cmd, new_cmd);
+	}
 	return (head_cmd);
 }

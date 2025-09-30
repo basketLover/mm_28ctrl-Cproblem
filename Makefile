@@ -17,10 +17,9 @@ SRC         = minishell.c cd_builtin.c echo_builtin.c env_builtin.c \
 				export_utils.c expand_utils.c commands.c execute.c \
 				tokenizer.c commands_utils.c process_input.c process_utils.c \
 				pipe.c pipe_utils.c redirections_utils.c parse_tk_to_cmds.c \
-				expand_token.c heredoc_utils.c
+				expand_token.c heredoc_utils.c setup_signals.c
 				
 OBJS = $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
-
 
 all: $(LIBFT) $(NAME)
 

@@ -6,7 +6,7 @@
 /*   By: mdolores <mdolores@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 15:00:21 by iumorave          #+#    #+#             */
-/*   Updated: 2025/09/28 22:08:51 by mdolores         ###   ########.fr       */
+/*   Updated: 2025/09/30 13:42:02 by mdolores         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@
 # include <fcntl.h>
 # include "libft/ft_printf/ft_printf.h"
 
-extern int	g_sig;
-extern int	g_heredoc_interrupted;
+extern volatile sig_atomic_t	g_sig;
 
 typedef struct s_data
 {
@@ -40,6 +39,8 @@ typedef struct s_data
 	long	current_line;
 	long	heredoc_open_line;
 	int		last_status;
+	int		heredoc_interrupted;
+	struct termios	termios_orig;
 }	t_data;
 
 typedef enum e_state
@@ -89,15 +90,16 @@ typedef struct s_cmd
 	int				argc;
 	t_redir			*redirs;
 	struct s_cmd	*next;
+	int				heredoc_only;
 }	t_cmd;
 
 void	handle_gsig(t_data *data);
 void	handle_sigint(int sig);
-void    heredoc_sigint(int sig);
+void	heredoc_sigint(int sig);
 void	setup_signals(void);
 void	setup_child_signals(void);
-void	set_echoctl(int enable);
-void	restore_echoctl(void);
+void	set_echoctl(t_data *data, int enable);
+void	restore_echoctl(t_data *data);
 
 void	process_input(char *input, t_data *data);
 void	trim_argv(t_cmd *cmds);
@@ -177,6 +179,7 @@ int		swap_stdin_with_fd(int fd);
 char	*get_line(const char *prompt);
 void	print_declare_line(char *entry);
 void	rl_print_error_and_reset_prompt(char *msg);
+void	print_heredoc_warning(char *delim, t_data *data);
 void	free_cmds_and_input(t_cmd *cmds, char *input);
 void	free_string_array(char **array);
 void	free_tokens(t_token *head);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mariserr <mariserr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mdolores <mdolores@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 13:31:22 by mariserr          #+#    #+#             */
-/*   Updated: 2025/09/27 13:31:24 by mariserr         ###   ########.fr       */
+/*   Updated: 2025/09/30 11:57:32 by mdolores         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,25 @@
 #define _GNU_SOURCE
 #include "minishell.h"
 #include "libft/libft.h"
+
+static int	process_heredoc_redir(t_redir *r, t_data *data)
+{
+	if (r->fd >= 0)
+		close(r->fd);
+	data->heredoc_interrupted = 0;
+	r->fd = handle_heredoc(r->target, r->quoted, data);
+	if (r->fd < 0)
+	{
+		if (data->heredoc_interrupted)
+			return (-1);
+		else
+		{
+			ft_putendl_fd("minishell: failed to create heredoc", 2);
+			return (-1);
+		}
+	}
+	return (0);
+}
 
 int	prepare_heredocs_for_cmds(t_cmd *cmds, t_data *data)
 {
@@ -28,23 +47,8 @@ int	prepare_heredocs_for_cmds(t_cmd *cmds, t_data *data)
 		{
 			if (r->type == T_HEREDOC)
 			{
-				if (r->fd >= 0)
-					close(r->fd);
-				g_heredoc_interrupted = 0;
-				r->fd = handle_heredoc(r->target, r->quoted, data);
-				if (r->fd < 0)
-				{
-					if (g_heredoc_interrupted)
-					{
-						/* Heredoc was interrupted by Ctrl+C, just return without error message */
-						return (-1);
-					}
-					else
-					{
-						ft_putendl_fd("minishell: failed to create heredoc", 2);
-						return (-1);
-					}
-				}
+				if (process_heredoc_redir(r, data) < 0)
+					return (-1);
 			}
 			r = r->next;
 		}
