@@ -16,20 +16,26 @@ static char	*get_command_path(t_cmd *cmds, t_data *data)
 
 static void	check_path_status(char *full_path)
 {
+	char		*msg;
+	char		*msg2;
 	struct stat	st;
 
 	if (stat(full_path, &st) == 0)
 	{
 		if (S_ISDIR(st.st_mode))
 		{
-			ft_putendl_fd(ft_strjoin3("minishell: ", full_path,
-					": Is a directory"), 2);
+			msg = ft_strjoin3("minishell: ", full_path,
+					": Is a directory");
+			ft_putendl_fd(msg, 2);
+			free(msg);
 			exit(126);
 		}
 		if (access(full_path, X_OK) != 0)
 		{
-			ft_putendl_fd(ft_strjoin3("minishell: ", full_path,
-					": Permission denied"), 2);
+			msg2 = ft_strjoin3("minishell: ", full_path,
+					": Permission denied");
+			ft_putendl_fd(msg2, 2);
+			free(msg2);
 			exit(126);
 		}
 	}

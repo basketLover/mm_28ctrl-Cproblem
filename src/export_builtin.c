@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_builtin.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iumorave <iumorave@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mdolores <mdolores@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:57:55 by iumorave          #+#    #+#             */
-/*   Updated: 2025/09/27 14:57:56 by iumorave         ###   ########.fr       */
+/*   Updated: 2025/09/30 20:19:00 by mdolores         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,9 @@ int	process_export_arg(char *arg, t_data *data)
 
 int	export_builtin(char **args, t_data *data)
 {
-	int	i;
-	int	status;
+	int		i;
+	int		status;
+	char	*msg;
 
 	if (!args[1])
 		return (print_export(data), 0);
@@ -111,8 +112,12 @@ int	export_builtin(char **args, t_data *data)
 	{
 		if (!process_export_arg(args[i], data))
 		{
-			ft_putendl_fd(ft_strjoin3("export: '", args[i],
-					"': not a valid identifier"), 2);
+			msg = ft_strjoin3("export: '", args[i],
+					"': not a valid identifier");
+			if (!msg)
+				return (1);
+			ft_putendl_fd(msg, 2);
+			free(msg);
 			status = 1;
 		}
 		i++;

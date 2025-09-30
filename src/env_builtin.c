@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iumorave <iumorave@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mdolores <mdolores@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:57:27 by iumorave          #+#    #+#             */
-/*   Updated: 2025/09/27 14:57:28 by iumorave         ###   ########.fr       */
+/*   Updated: 2025/09/30 20:06:02 by mdolores         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ char	*ft_strjoin3(const char *s1, const char *s2, const char *s3)
 	size_t	total_len;
 	char	*joined;
 
-	len1 = strlen(s1);
-	len2 = strlen(s2);
-	len3 = strlen(s3);
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	len3 = ft_strlen(s3);
 	total_len = len1 + len2 + len3 + 1;
 	joined = malloc(total_len);
 	if (!joined)
@@ -61,7 +61,7 @@ char	*get_env_value(char **env, const char *key)
 	size_t	key_len;
 
 	i = 0;
-	key_len = strlen(key);
+	key_len = ft_strlen(key);
 	while (env[i] != NULL)
 	{
 		if (strncmp(env[i], key, key_len) == 0 && env[i][key_len] == '=')

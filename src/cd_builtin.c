@@ -6,7 +6,7 @@
 /*   By: mdolores <mdolores@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:56:12 by iumorave          #+#    #+#             */
-/*   Updated: 2025/09/30 14:30:31 by mdolores         ###   ########.fr       */
+/*   Updated: 2025/09/30 20:27:53 by mdolores         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,6 @@ void	update_pwd_and_oldpwd(char *oldpwd, char *pwd, char ***env)
 	set_env_var(env, "PWD", pwd);
 }
 
-void	handle_invalid_path(char *cmd)
-{
-	char	*msg;
-
-	msg = ft_strjoin3("minishell: ", cmd, ": command not found");
-	if (!msg)
-		return ;
-	ft_putendl_fd(msg, 2);
-	free(msg);
-	exit(127);
-}
-
 int	cd_to_home(t_data *data)
 {
 	char	*home;
@@ -45,7 +33,7 @@ int	cd_to_home(t_data *data)
 	home = get_env_value(data->env, "HOME");
 	if (!home)
 	{
-		ft_printf("cd: HOME not set\n");
+		ft_putendl_fd("cd: HOME not set", 2);
 		free(oldpwd);
 		return (1);
 	}
@@ -96,7 +84,7 @@ int	cd_builtin(char **args, t_data *data)
 		i++;
 	if (i > 2)
 	{
-		ft_putendl_fd("cd: too many arguments\n", 2);
+		ft_putendl_fd("cd: too many arguments", 2);
 		return (1);
 	}
 	if (args[1] == NULL)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mdolores <mdolores@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/30 20:48:11 by mdolores          #+#    #+#             */
+/*   Updated: 2025/09/30 20:48:13 by mdolores         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #define _POSIX_C_SOURCE 200809L
 #define _GNU_SOURCE
 #include "minishell.h"
@@ -27,4 +39,16 @@ void	print_heredoc_warning(char *delim, t_data *data)
 	free(temp);
 	free(temp2);
 	free(msg);
+}
+
+void	handle_invalid_path(char *cmd)
+{
+	char	*msg;
+
+	msg = ft_strjoin3("minishell: ", cmd, ": command not found");
+	if (!msg)
+		return ;
+	ft_putendl_fd(msg, 2);
+	free(msg);
+	exit(127);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset_builtin.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iumorave <iumorave@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mdolores <mdolores@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:58:29 by iumorave          #+#    #+#             */
-/*   Updated: 2025/09/27 14:58:29 by iumorave         ###   ########.fr       */
+/*   Updated: 2025/09/30 19:45:26 by mdolores         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,9 @@ static void	remove_env_var(char **env, char *key)
 
 int	unset_builtin(char **args, t_data *data)
 {
-	int	i;
-	int	err;
+	int		i;
+	int		err;
+	char	*msg;
 
 	if (!args[1])
 		return (0);
@@ -56,7 +57,10 @@ int	unset_builtin(char **args, t_data *data)
 	{
 		if (!is_valid_identifier(args[i]))
 		{
-			ft_printf("unset: '%s': not a valid identifier\n", args[i]);
+			msg = ft_strjoin3("unset: '", args[i], "': not a valid \
+				identifier");
+			ft_putendl_fd(msg, 2);
+			free(msg);
 			err = 1;
 		}
 		else
